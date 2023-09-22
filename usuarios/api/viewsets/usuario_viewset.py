@@ -26,14 +26,13 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 @api_view(['POST'])
 def user_registration(request):
     if request.method == 'POST':
-        username = request.data.get('username')
+        username = request.data.get('email')
         password = request.data.get('password')
         tipo = request.data.get('tipo_usuario')
         data_nascimento = request.data.get('data_nascimento')
         cpf = request.data.get('cpf')
         celular = request.data.get('celular')
         celular_formatado = formatar_celular(celular)
-        email = request.data.get('email')
 
         if not (username and password):
             return Response({'error': 'Informe um nome de usuário e senha.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -60,7 +59,7 @@ def user_registration(request):
         if not re.match(r'^\(\d{2}\) \d \d{4}-\d{4}$', celular_formatado):
             return Response({'error': f'Número de celular inválido. Use o formato (xx) x xxxx-xxxx.'}, status=status.HTTP_400_BAD_REQUEST)
         
-        if not validar_email(email):
+        if not validar_email(username):
             return Response({'error': 'Endereço de e-mail inválido.'}, status=status.HTTP_400_BAD_REQUEST)
         
         user = User.objects.create_user(username=username, password=password)
@@ -71,7 +70,6 @@ def user_registration(request):
             data_nascimento=data_nascimento,
             cpf=cpf,
             celular=celular_formatado,
-            email=email,
         )
 
         usuario_serializer = UsuarioSerializer(usuario)
@@ -84,7 +82,7 @@ def user_registration(request):
 )
 @api_view(['POST'])
 def user_login(request):
-    username = request.data.get('username')
+    username = request.data.get('email')
     password = request.data.get('password')
 
     user = authenticate(username=username, password=password)
