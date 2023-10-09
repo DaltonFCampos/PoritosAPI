@@ -28,6 +28,9 @@ class AnimalViewSet(viewsets.ModelViewSet):
         if especie not in dict(Animal.ESPECIES_CHOICES):
                 return Response({'error': 'Espécie inválida'}, status=status.HTTP_400_BAD_REQUEST)
         
+        if sexo not in dict(Animal.SEXO_CHOICES):
+                return Response({'error': 'Sexo do Animal inválido'}, status=status.HTTP_400_BAD_REQUEST)
+        
         try:
             usuario = Usuario.objects.get(usuario=request.user)
         except Usuario.DoesNotExist:
@@ -63,7 +66,7 @@ class AnimalViewSet(viewsets.ModelViewSet):
             usuario = Usuario.objects.get(usuario=request.user)
         except Usuario.DoesNotExist:
             usuario = None
-            
+
         # Obter todos os animais vinculados ao usuário
         animais = Animal.objects.filter(usuario=usuario)
 
