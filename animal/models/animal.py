@@ -48,7 +48,8 @@ class Animal(models.Model):
     foto = models.ImageField(
         upload_to='imagens/animal_fotos/',
         null=True,
-        blank=True
+        blank=True,
+        default='imagens/animal_fotos/NoImage.png'
     )
 
     def __str__(self):
