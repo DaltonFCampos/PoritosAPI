@@ -27,6 +27,7 @@ urlpatterns = [
     # Apps
     path('api/', include('usuarios.urls')),
     path('api/', include('loja.urls')),
+    path('api/', include('animal.urls')),
     # Documentação
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     #apps
     'usuarios',
     'loja',
+    'animal',
 ]
 
 MIDDLEWARE = [
