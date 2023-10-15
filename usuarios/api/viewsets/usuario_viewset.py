@@ -11,6 +11,7 @@ import re
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import AnonymousUser
+from rest_framework.decorators import action
 
 from usuarios.document.login_schema import request_body_login_schema, login_responses
 from drf_yasg.utils import swagger_auto_schema
@@ -22,6 +23,19 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
     http_method_names = ['get', ]
+
+    @action(detail=True, methods=['get'])
+    def obter_celular_username(self, request, pk=None):
+        try:
+            usuario = self.get_object()
+            data = {
+                'username': usuario.usuario.username,
+                'celular': usuario.celular
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        except Usuario.DoesNotExist:
+            return Response({'detail': 'Usuário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        
 
 @api_view(['POST'])
 def user_registration(request):
@@ -112,7 +126,7 @@ def teste(request):
             return Response({'error': 'Jogador não encontrado'}, status=status.HTTP_404_NOT_FOUND)
     else:
         return Response({'error': 'Token inválido'}, status=status.HTTP_401_UNAUTHORIZED)
-    
+
 def verifica_cpf(cpf):
     # Remove pontos e traços do CPF e verifica se possui 11 dígitos
     cpf = ''.join(filter(str.isdigit, cpf))
