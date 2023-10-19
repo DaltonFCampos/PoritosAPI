@@ -21,6 +21,11 @@ class Usuario(models.Model):
         on_delete=models.CASCADE,
         null=True
     )
+
+    nome = models.CharField(
+        max_length=100, 
+        default="NomeUsuário"
+    )
     
     data_nascimento = models.DateField(
         null=False,

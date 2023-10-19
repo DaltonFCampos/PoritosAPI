@@ -41,6 +41,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 def user_registration(request):
     if request.method == 'POST':
         username = request.data.get('email')
+        nome = request.data.get('nome')
         password = request.data.get('password')
         tipo = request.data.get('tipo_usuario')
         data_nascimento = request.data.get('data_nascimento')
@@ -49,13 +50,15 @@ def user_registration(request):
         celular_formatado = formatar_celular(celular)
 
         if not (username and password):
-            return Response({'error': 'Informe um nome de usuário e senha.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Informe um Email de usuário e senha.'}, status=status.HTTP_400_BAD_REQUEST)
         
         if tipo not in dict(Usuario.CHOICES_TIPO_USUARIO):
             return Response({'error': 'Tipo de usuario inválido'}, status=status.HTTP_400_BAD_REQUEST)
         
         data_atual = timezone.now().date()
 
+        if not(nome) or nome == "":
+            return Response({'error': 'Informe um nome de usuário.'}, status=status.HTTP_400_BAD_REQUEST)
         try:
             data_nascimento = timezone.datetime.strptime(data_nascimento, '%Y-%m-%d').date()
         except ValueError:
@@ -80,6 +83,7 @@ def user_registration(request):
         
         usuario = Usuario.objects.create(
             tipo_usuario=tipo, 
+            nome=nome,
             usuario=user,
             data_nascimento=data_nascimento,
             cpf=cpf,
