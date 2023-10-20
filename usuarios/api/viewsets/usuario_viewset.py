@@ -37,6 +37,23 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             return Response({'detail': 'Usuário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
         
 
+    @action(detail=False, methods=['get'])
+    def obter_info_por_token(self, request):
+        user = request.user
+        usuario = Usuario.objects.get(usuario=user)
+
+        response_data = {
+            "id": usuario.id,
+            "tipo_usuario": usuario.tipo_usuario,
+            "nome": usuario.nome,
+            "data_nascimento": usuario.data_nascimento,
+            "cpf": usuario.cpf,
+            "celular": usuario.celular,
+            "usuario": user.username 
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+    
 @api_view(['POST'])
 def user_registration(request):
     if request.method == 'POST':
