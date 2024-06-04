@@ -2,11 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Usuario(models.Model):
-    nome_completo = models.CharField(
-        verbose_name='Nome Completo',
-        max_length=100,
-        null=False
-    )
 
     CHOICES_TIPO_USUARIO = (
         ('cliente', 'Cliente'),
@@ -23,9 +18,32 @@ class Usuario(models.Model):
     usuario = models.OneToOneField(
         User, 
         verbose_name=("usuario"),   
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True
     )
 
+    nome = models.CharField(
+        max_length=100, 
+        default="NomeUsuário"
+    )
+    
+    data_nascimento = models.DateField(
+        null=False,
+        blank=False
+    )
+
+    cpf = models.CharField(
+        max_length=14,
+        unique=True,
+        null=False,
+        blank=False
+    )
+
+    celular = models.CharField(
+        max_length=15,
+        null=False,
+        blank=False
+    )
+
     def __str__(self):
-        return self.nome_completo
+        return self.usuario.username
